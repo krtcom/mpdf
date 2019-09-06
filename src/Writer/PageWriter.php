@@ -185,6 +185,11 @@ final class PageWriter
 
 				$this->writer->write(sprintf('/TrimBox [%.3F %.3F %.3F %.3F]', $owidthPt_LR, $owidthPt_TB, $wPt - $owidthPt_LR, $hPt - $owidthPt_TB));
 			}
+
+            if ($this->mpdf->pageDim[$n]['rotation']) {
+                $this->writer->write(sprintf('/Rotate %d', $this->mpdf->pageDim[$n]['rotation']));
+            }
+
 			$this->writer->write('/Resources 2 0 R');
 
 			// Important to keep in RGB colorSpace when using transparency

@@ -791,6 +791,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 	var $autoPageBreak; // automatic page breaking
 	var $PageBreakTrigger; // threshold used to trigger page breaks
 	var $InFooter; // flag set when processing footer
+    var $pageRotation; // current page rotation
 
 	var $InHTMLFooter;
 	var $processingFooter; // flag set when processing footer - added for columns
@@ -2783,8 +2784,9 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 		$efvalue = (isset($a['efvalue']) ? $a['efvalue'] : (isset($a['even-footer-value']) ? $a['even-footer-value'] : 0));
 		$pagesel = (isset($a['pagesel']) ? $a['pagesel'] : (isset($a['pageselector']) ? $a['pageselector'] : ''));
 		$newformat = (isset($a['newformat']) ? $a['newformat'] : (isset($a['sheet-size']) ? $a['sheet-size'] : ''));
+        $rotation = (isset($a['rotation']) ? $a['rotation'] : 0);
 
-		$this->AddPage($orientation, $condition, $resetpagenum, $pagenumstyle, $suppress, $mgl, $mgr, $mgt, $mgb, $mgh, $mgf, $ohname, $ehname, $ofname, $efname, $ohvalue, $ehvalue, $ofvalue, $efvalue, $pagesel, $newformat);
+		$this->AddPage($orientation, $condition, $resetpagenum, $pagenumstyle, $suppress, $mgl, $mgr, $mgt, $mgb, $mgh, $mgf, $ohname, $ehname, $ofname, $efname, $ohvalue, $ehvalue, $ofvalue, $efvalue, $pagesel, $newformat, $rotation);
 	}
 
 	// mPDF 6 pagebreaktype
@@ -2892,7 +2894,8 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 		$ofvalue = 0,
 		$efvalue = 0,
 		$pagesel = '',
-		$newformat = ''
+		$newformat = '',
+        $rotation = 0
 	) {
 		/* -- CSS-FLOAT -- */
 		// Float DIV
@@ -3153,8 +3156,10 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 			$this->_endpage();
 		}
 
+
+
 		// Start new page
-		$this->_beginpage($orientation, $mgl, $mgr, $mgt, $mgb, $mgh, $mgf, $ohname, $ehname, $ofname, $efname, $ohvalue, $ehvalue, $ofvalue, $efvalue, $pagesel, $newformat);
+		$this->_beginpage($orientation, $mgl, $mgr, $mgt, $mgb, $mgh, $mgf, $ohname, $ehname, $ofname, $efname, $ohvalue, $ehvalue, $ofvalue, $efvalue, $pagesel, $newformat, $rotation);
 
 		if ($this->docTemplate) {
 			$currentReaderId = $this->currentReaderId;
@@ -9931,7 +9936,8 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 		$ofvalue = 0,
 		$efvalue = 0,
 		$pagesel = '',
-		$newformat = ''
+		$newformat = '',
+        $rotation = 0
 	) {
 		if (!($pagesel && $this->page == 1 && (sprintf("%0.4f", $this->y) == sprintf("%0.4f", $this->tMargin)))) {
 			$this->page++;
@@ -10245,6 +10251,13 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 
 		$this->x = $this->lMargin;
 		$this->y = $this->tMargin;
+
+		//Set rotation
+        if ($rotation) {
+            $this->pageRotation = $rotation;
+        }
+
+        $this->pageDim[$this->page]['rotation'] = $this->pageRotation;
 	}
 
 	// mPDF 6
