@@ -1030,7 +1030,8 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 			$mgb,
 			$mgh,
 			$mgf,
-			$orientation
+			$orientation,
+            $rotation
 		) = $this->initConstructorParams($config);
 
 		$this->logger = new NullLogger();
@@ -1266,6 +1267,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 
 		$this->_setPageSize($format, $orientation);
 		$this->DefOrientation = $orientation;
+		$this->pageRotation = $rotation;
 
 		$this->margin_header = $mgh;
 		$this->margin_footer = $mgf;
@@ -1584,6 +1586,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 			'margin_header' => 9,
 			'margin_footer' => 9,
 			'orientation' => 'P',
+            'rotation' => 0,
 		];
 
 		foreach ($constructor as $key => $val) {
