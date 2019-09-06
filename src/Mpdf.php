@@ -10256,7 +10256,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 		$this->y = $this->tMargin;
 
 		//Set rotation
-        if ($rotation) {
+        if ($rotation != $this->pageRotation) {
             $this->pageRotation = $rotation;
         }
 
